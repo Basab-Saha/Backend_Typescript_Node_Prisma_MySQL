@@ -8,7 +8,7 @@ import { JWT_SECRET } from "../secrets";
 
 import { BadRequestException } from "../exceptions/bad-request";
 import { ErrorCode } from "../exceptions/root";
-import { UnprocessableEntityException } from "../exceptions/validation";
+//import { UnprocessableEntityException } from "../exceptions/validation";
 import { SignupSchema } from "../schema/users";
 import { NotFoundException } from "../exceptions/not-found";
 
@@ -63,3 +63,4 @@ export const login=async(req:Request,res:Response,next:NextFunction)=>{
     }
 
 }
+
