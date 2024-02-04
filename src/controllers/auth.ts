@@ -65,21 +65,6 @@ export const login=async(req:Request,res:Response,next:NextFunction)=>{
 }
 
 export const me = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const userHeader = req.headers['x-user'];
-
-        // Check if the userHeader is defined and is a string
-        if (typeof userHeader === 'string') {
-            // Parse the JSON string into an object
-            const user = JSON.parse(userHeader);
-            res.json(user);
-        } else {
-            // Handle the case where the user header is undefined or an array
-            // You can return an appropriate error response or handle it as needed
-            throw new Error('User information not found in headers');
-        }
-    } catch (error) {
-        next(error); // Pass the error to the error handling middleware
-    }
+    res.json((req as any).user);
 };
 

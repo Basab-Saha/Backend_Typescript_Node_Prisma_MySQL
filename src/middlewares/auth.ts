@@ -5,6 +5,9 @@ import { ErrorCode } from "../exceptions/root";
 import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from "../secrets";
 import { primsaClient } from "..";
+import { User } from '@prisma/client';
+
+
 
  const authMiddleware=async(req:Request,res:Response,next:NextFunction)=>{
 
@@ -29,7 +32,8 @@ import { primsaClient } from "..";
         // ar jodi user thake tahole req.user e user ta store kore debo ar 
         // next() middleware e call korbo
         else{
-            req.headers['x-user'] = JSON.stringify(user);
+           // req.headers['x-user'] = JSON.stringify(user);
+           (req as any).user=user  ;
             next();  
         }
     } catch (error) {
