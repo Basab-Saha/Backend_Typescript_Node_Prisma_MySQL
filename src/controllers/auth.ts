@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction , Request,Response } from "express";
 import { primsaClient } from "..";
 
 import {compareSync, hashSync} from 'bcrypt';
@@ -30,7 +30,7 @@ export const signup=async(req:Request,res:Response,next:NextFunction)=>{
     })
     if(user){
         //throw Error("User already exists");
-        next (new BadRequestException("User already exists",ErrorCode.USER_ALREADY_EXISTS))
+        throw new BadRequestException("User already exists",ErrorCode.USER_ALREADY_EXISTS);
     }
     user=await primsaClient.user.create({
         data:{
@@ -54,13 +54,32 @@ export const login=async(req:Request,res:Response,next:NextFunction)=>{
         }
     })
     if (!user) {
-        next(new NotFoundException("User not found sorry", ErrorCode.USER_NOT_FOUND));
+        throw new NotFoundException("User not found sorry", ErrorCode.USER_NOT_FOUND);
     } else if (!compareSync(password, user.password)) {
-        next(new BadRequestException("Wrong password", ErrorCode.INCORRECT_PASSWORD));
+        throw new BadRequestException("Wrong password", ErrorCode.INCORRECT_PASSWORD);
     } else {
         const token = jwt.sign({ userID: user.id }, JWT_SECRET);
         res.json({ user, token });
     }
 
 }
+
+export const me = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userHeader = req.headers['x-user'];
+
+        // Check if the userHeader is defined and is a string
+        if (typeof userHeader === 'string') {
+            // Parse the JSON string into an object
+            const user = JSON.parse(userHeader);
+            res.json(user);
+        } else {
+            // Handle the case where the user header is undefined or an array
+            // You can return an appropriate error response or handle it as needed
+            throw new Error('User information not found in headers');
+        }
+    } catch (error) {
+        next(error); // Pass the error to the error handling middleware
+    }
+};
 

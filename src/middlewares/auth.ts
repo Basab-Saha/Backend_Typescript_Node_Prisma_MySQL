@@ -1,4 +1,4 @@
-import { NextFunction , Request,Response } from "express";
+import { Request, Response, NextFunction } from 'express';
 import { UnauthorizedException } from "../exceptions/unauthorized";
 import { ErrorCode } from "../exceptions/root";
 
@@ -9,7 +9,7 @@ import { primsaClient } from "..";
  const authMiddleware=async(req:Request,res:Response,next:NextFunction)=>{
 
     //step1) Extract the token from the header(named as authorization) this header will be given at the time of login
-    const token = req.headers.authorization!;
+    const token = req.headers.authorization!
 
     //step2) If token is not present then throw an error of unauthorized
     if (!token) {
@@ -29,7 +29,7 @@ import { primsaClient } from "..";
         // ar jodi user thake tahole req.user e user ta store kore debo ar 
         // next() middleware e call korbo
         else{
-            req.user=user; 
+            req.headers['x-user'] = JSON.stringify(user);
             next();  
         }
     } catch (error) {
